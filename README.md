@@ -8,7 +8,7 @@ To get the files onto your own computer:
 - On this GitHub window, click the green ```<> Code``` button and copy the HTTPS url
 - Back in the command line interface:
   - ```git clone <paste HTTPS url>``` to get a copy of the repository at your current working directory
-- __Be sure not to change any files inside this repository! If you want to make changes, copy any files into a different folder on your own computer!__
+- __Be sure not to change any files inside your cloned repository! If you want to make changes, copy any files into a different folder on your own computer!__
 
 Once the files have been downloaded, to get future changes:
 - In a command line interface:
