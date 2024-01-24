@@ -3,6 +3,7 @@
 This repo contains weekly code samples from the Connected Devices course of Spring 2024. 
 
 To get the files onto your own computer:
+- Ensure the Git command line tools are installed on your computer first. Follow the steps [here](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) to install.
 - In a command line interface (terminal or powershell):
   - Use ```cd``` to change your working directory to the location in which you want to save the files
 - On this GitHub window, click the green ```<> Code``` button and copy the HTTPS url
