@@ -1,11 +1,13 @@
 <html>
     <head>
-        <title>WebSocket Starter</title>
+
     </head>
     <body>
         
         <p id="socket_status"></p>
         <p id="socket_messages"></p>
+        <input type="range" min="0" max="180"
+            oninput="sendSliderRange(event)">
         <script>
             const socket = new WebSocket("ws://127.0.0.1:1880/messages");
             socket.addEventListener("open", handleSocketConnection);
@@ -22,6 +24,10 @@
 
             function handleSocketMessage(e) {
                 document.getElementById('socket_messages').innerHTML = e.data;
+            }
+
+            function sendSliderRange(e) {
+                socket.send(e.target.value);
             }
         </script>
     </body>
