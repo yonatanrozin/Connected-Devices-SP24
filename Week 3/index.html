@@ -1,0 +1,22 @@
+<html>
+    <head>
+
+    </head>
+    <body>
+        
+        <p id="socket_status"></p>
+        <script>
+            const socket = new WebSocket("ws://127.0.0.1:1880/messages");
+            socket.addEventListener("open", handleSocketConnection);
+            socket.addEventListener("close", handleSocketClosed);
+
+
+            function handleSocketClosed() {
+                document.getElementById('socket_status').innerHTML = "socket closed.";
+            }
+            function handleSocketConnection() {
+                document.getElementById("socket_status").innerHTML = "socket connected.";
+            }
+        </script>
+    </body>
+</html>
