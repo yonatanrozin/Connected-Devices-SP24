@@ -1,10 +1,11 @@
 <html>
     <head>
-
+        <title>WebSocket Starter</title>
     </head>
     <body>
         
         <p id="socket_status"></p>
+        <p id="socket_messages"></p>
         <script>
             const socket = new WebSocket("ws://127.0.0.1:1880/messages");
             socket.addEventListener("open", handleSocketConnection);
@@ -16,6 +17,11 @@
             }
             function handleSocketConnection() {
                 document.getElementById("socket_status").innerHTML = "socket connected.";
+                socket.addEventListener("message", handleSocketMessage);
+            }
+
+            function handleSocketMessage(e) {
+                document.getElementById('socket_messages').innerHTML = e.data;
             }
         </script>
     </body>
