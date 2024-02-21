@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="https://unpkg.com/p5ble@0.0.7/dist/p5.ble.js"></script>
+    </head>
+
+    <body>
+        <button onClick="BLEConnect()">BLE Connect</button>
+        <input id="send_value"/>
+        <button onClick="sendVal()">Send text</button>
+        <script>
+            const serviceUUID = "4acfbfe1-8dea-4fdd-8c9e-5f22a228bdb6";
+            let myCharacteristic;
+            window.BLE = new p5ble();
+
+            function BLEConnect() {BLE.connect(serviceUUID, handleBLEConnected)}
+
+            function handleBLEConnected(err, characteristics) {
+                myCharacteristic = characteristics[0];
+                BLE.startNotifications(myCharacteristic, handleNewBLEValue, "float32");
+            }
+
+            function handleNewBLEValue(value) {
+                console.log(value);
+                document.body.style.backgroundColor = `rgb(${value/4}, 0, 0`;
+            }
+
+            function sendVal() {
+                if (!myCharacteristic) return;
+                BLE.write(myCharacteristic, (document.getElementById("send_value").value));
+            }
+        </script>
+    </body>
+
+</html>
