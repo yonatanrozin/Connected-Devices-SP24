@@ -80,7 +80,7 @@ void loop() {
     if (!characteristic1) {
       Serial.println("characteristic not found.");
       while (1);
-   
+    }
 
     while (peripheral.connected()) {
       digitalWrite(LED_BUILTIN, HIGH);
@@ -101,7 +101,7 @@ void loop() {
 
       //DO STUFF WITH valueIn HERE!!!
       Serial.println(valueIn);
-    }
+    
 
   }
 
