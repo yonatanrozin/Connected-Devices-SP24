@@ -1,5 +1,28 @@
 [
     {
+        "id": "ade28ba23ad7ab84",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "be9907aa1aaff98e",
+        "type": "websocket in",
+        "z": "ade28ba23ad7ab84",
+        "name": "",
+        "server": "911978179feb4929",
+        "client": "",
+        "x": 190,
+        "y": 280,
+        "wires": [
+            [
+                "7a9668014ccc62fa"
+            ]
+        ]
+    },
+    {
         "id": "0db3f93d31afc0b9",
         "type": "debug",
         "z": "ade28ba23ad7ab84",
@@ -15,5 +38,78 @@
         "x": 620,
         "y": 280,
         "wires": []
+    },
+    {
+        "id": "d5ead0a63cde05cf",
+        "type": "websocket out",
+        "z": "ade28ba23ad7ab84",
+        "name": "",
+        "server": "e0ebcb7fcc1ff8e8",
+        "client": "",
+        "x": 630,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "917123511efffe6f",
+        "type": "inject",
+        "z": "ade28ba23ad7ab84",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 200,
+        "y": 420,
+        "wires": [
+            [
+                "d5ead0a63cde05cf"
+            ]
+        ]
+    },
+    {
+        "id": "7a9668014ccc62fa",
+        "type": "function",
+        "z": "ade28ba23ad7ab84",
+        "name": "function 1",
+        "func": "delete msg._session;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 400,
+        "y": 340,
+        "wires": [
+            [
+                "d5ead0a63cde05cf",
+                "0db3f93d31afc0b9"
+            ]
+        ]
+    },
+    {
+        "id": "911978179feb4929",
+        "type": "websocket-listener",
+        "path": "/device1",
+        "wholemsg": "false"
+    },
+    {
+        "id": "e0ebcb7fcc1ff8e8",
+        "type": "websocket-listener",
+        "path": "/device2",
+        "wholemsg": "false"
     }
 ]
