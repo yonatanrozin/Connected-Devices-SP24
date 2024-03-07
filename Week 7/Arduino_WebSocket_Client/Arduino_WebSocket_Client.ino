@@ -1,5 +1,3 @@
-#include <HTTPClient.h>
-
 /*
   Simple WebSocket client for ArduinoHttpClient library
   Connects to the WebSocket server, and sends a hello
