@@ -13,7 +13,7 @@
   this example is in the public domain
 */
 #include <ArduinoHttpClient.h>
-#include <WiFi.h>
+#include <WiFiNINA.h>
 #include "arduino_secrets.h"
 
 ///////please enter your sensitive data in the Secret tab/arduino_secrets.h
