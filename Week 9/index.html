@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+    <head>
+
+    </head>
+    <body>
+        <button onClick="getStuff()">GET</button>
+
+        <input id="input" />
+        <button onClick="postStuff()">POST</button>
+        <script>
+
+            let serverIP = "";
+            let port = 80; //default http port = 80, or use 1880 for node-red
+            let endpoint = "/"; 
+
+            //assemble URL (or just manually type it here)
+            const url = `http://${serverIP}:${port}${endpoint}`;
+
+            //if your endpoint responds with plain text:
+            function getStuff() {
+                fetch(url)
+                    .then(res => res.text())
+                    .then(text => {
+                        //do stuff with text here                        
+                    }
+                );
+            }
+
+            // if your endpoint responds with JSON:
+            // function getStuff() {
+            //     fetch(url)
+            //         .then(res => res.json())
+            //         .then(json => {
+            //             //do stuff with json here
+            //         }
+            //     );
+            // }
+
+            function postStuff() {
+
+                //if posting raw text:
+                // let contentType = 'text/plain';
+                // let reqBody = document.getElementById("input").value;
+                
+                //if posting JSON:
+                let contentType = 'application/json';
+                let reqBody = JSON.stringify({msg: document.getElementById("input").value})
+                
+                fetch (url, {
+                    headers: {'Content-Type': contentType},
+                    method: 'POST', //or use "PUT"
+                    'body': reqBody
+                })
+                .then(res => {console.log(res.status)});
+            }
+        </script>
+    </body>
+</html>
