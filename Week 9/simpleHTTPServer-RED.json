@@ -1,0 +1,283 @@
+[
+    {
+        "id": "9dd289fa794ea349",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "9040a14be642b906",
+        "type": "http in",
+        "z": "9dd289fa794ea349",
+        "name": "",
+        "url": "/message",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 420,
+        "y": 120,
+        "wires": [
+            [
+                "052271bc2a033b19"
+            ]
+        ]
+    },
+    {
+        "id": "052271bc2a033b19",
+        "type": "function",
+        "z": "9dd289fa794ea349",
+        "name": "function 1",
+        "func": "msg.payload = flow.get(\"message\");\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 660,
+        "y": 120,
+        "wires": [
+            [
+                "9512ee4c987cc06e"
+            ]
+        ]
+    },
+    {
+        "id": "9512ee4c987cc06e",
+        "type": "http response",
+        "z": "9dd289fa794ea349",
+        "name": "",
+        "statusCode": "",
+        "headers": {
+            "content-type": "application/json"
+        },
+        "x": 810,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "29ab0b1fa760098e",
+        "type": "http in",
+        "z": "9dd289fa794ea349",
+        "name": "",
+        "url": "/addMessage",
+        "method": "post",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 410,
+        "y": 200,
+        "wires": [
+            [
+                "df1c7035a6e27211"
+            ]
+        ]
+    },
+    {
+        "id": "df1c7035a6e27211",
+        "type": "function",
+        "z": "9dd289fa794ea349",
+        "name": "function 2",
+        "func": "flow.set(\"message\", msg.req.body);\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 660,
+        "y": 200,
+        "wires": [
+            [
+                "9512ee4c987cc06e",
+                "11936f2aa369865b"
+            ]
+        ]
+    },
+    {
+        "id": "60b1cb95b51f486f",
+        "type": "http request",
+        "z": "9dd289fa794ea349",
+        "name": "",
+        "method": "POST",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "http://68.183.134.255:1880/addMessage",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 450,
+        "y": 360,
+        "wires": [
+            [
+                "bd1aff1a4ef3d9c8"
+            ]
+        ]
+    },
+    {
+        "id": "963cfec7bd1ca880",
+        "type": "inject",
+        "z": "9dd289fa794ea349",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "hi",
+        "payloadType": "str",
+        "x": 230,
+        "y": 360,
+        "wires": [
+            [
+                "60b1cb95b51f486f"
+            ]
+        ]
+    },
+    {
+        "id": "bd1aff1a4ef3d9c8",
+        "type": "debug",
+        "z": "9dd289fa794ea349",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 720,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "8e93cde84257a3a5",
+        "type": "http request",
+        "z": "9dd289fa794ea349",
+        "name": "",
+        "method": "GET",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "http://68.183.134.255:1880/message",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 450,
+        "y": 440,
+        "wires": [
+            [
+                "184857bd59a3efbe"
+            ]
+        ]
+    },
+    {
+        "id": "e97e3f8da41a51d2",
+        "type": "inject",
+        "z": "9dd289fa794ea349",
+        "name": "",
+        "props": [],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 210,
+        "y": 440,
+        "wires": [
+            [
+                "8e93cde84257a3a5"
+            ]
+        ]
+    },
+    {
+        "id": "184857bd59a3efbe",
+        "type": "debug",
+        "z": "9dd289fa794ea349",
+        "name": "debug 2",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 720,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "218ef6f7583629af",
+        "type": "comment",
+        "z": "9dd289fa794ea349",
+        "name": "Handle POST requests on endpoint /addMessage: update global variable value with request body contents",
+        "info": "",
+        "x": 360,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "7eaf15d0899bfba3",
+        "type": "comment",
+        "z": "9dd289fa794ea349",
+        "name": "Handle GET requests on endpoint /message: respond with current global variable value",
+        "info": "",
+        "x": 420,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "1360274e0aa80e4c",
+        "type": "comment",
+        "z": "9dd289fa794ea349",
+        "name": "Send POST request using msg payload as request body",
+        "info": "",
+        "x": 480,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "e1f126b90c2ea14a",
+        "type": "comment",
+        "z": "9dd289fa794ea349",
+        "name": "Send GET request to request latest value",
+        "info": "",
+        "x": 520,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "11936f2aa369865b",
+        "type": "debug",
+        "z": "9dd289fa794ea349",
+        "name": "debug 3",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 820,
+        "y": 240,
+        "wires": []
+    }
+]
