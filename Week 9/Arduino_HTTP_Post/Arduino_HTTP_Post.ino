@@ -8,7 +8,7 @@ char ssid[] = SECRET_SSID;
 char pass[] = SECRET_PASS;
 
 char serverAddress[] = "68.183.134.255";  //server IP address
-int port = 1880; //use HTTP default port 80, or use 1880 for node-red
+int port = 1880; //port your server is listening on. Probably default HTTP port 80, or 1880 for Node-RED.
 
 WiFiClient wifi;
 HttpClient client = HttpClient(wifi, serverAddress, port);
