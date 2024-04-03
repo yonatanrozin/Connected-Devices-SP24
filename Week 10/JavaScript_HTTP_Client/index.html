@@ -32,20 +32,23 @@
             const serverIP = "165.227.111.77";
             const port = 1880;
 
-            function postData() {
+            async function postData() {
                 const deviceID = document.getElementById("id_input").value;
-                fetch(`http://${serverIP}:${port}/multiData?deviceID=${deviceID}`, {
+                const res = await fetch(`http://${serverIP}:${port}/multiData?deviceID=${deviceID}`, {
                     method: "POST", 
                     body: document.getElementById("msg_input").value
                 });
+                const body = await res.text();
+                window.alert(`server responded with: ${body}`);
             }
 
-            function getData() {
-                const deviceID = document.getElementById("get_id_input").value
-                fetch(`http://${serverIP}:${port}/multiData?deviceID=${deviceID}`) //make the request
-                //.then(res => res.text()) //if expecting a plain text response
-                .then(res => res.json()) //if expecting a JSON response
-                .then(body => parseData(body)); //when body is parsed
+            //declare an async function if you're making HTTP requests inside it
+            async function getData() {
+                const deviceID = document.getElementById("get_id_input").value;
+                const res = await fetch(`http://${serverIP}:${port}/multiData?deviceID=${deviceID}`); //make the request
+                //const body = await res.text() //if expecting a plain text response
+                const body = await res.json();
+                parseData(body);
             }
 
             function parseData(json) {
