@@ -1,0 +1,489 @@
+[
+    {
+        "id": "240eb8a87d91f0f4",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "64820ca56f6e5d6a",
+        "type": "http in",
+        "z": "240eb8a87d91f0f4",
+        "name": "",
+        "url": "/newData",
+        "method": "post",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 220,
+        "y": 240,
+        "wires": [
+            [
+                "a3ebd692a4cb2947"
+            ]
+        ]
+    },
+    {
+        "id": "d474c3da133f6e7b",
+        "type": "http response",
+        "z": "240eb8a87d91f0f4",
+        "name": "",
+        "statusCode": "200",
+        "headers": {},
+        "x": 620,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "a3ebd692a4cb2947",
+        "type": "function",
+        "z": "240eb8a87d91f0f4",
+        "name": "function 1",
+        "func": "//get current contents of global variable\n//variable name inside global.get() can be anything\n//provide a default option in case the global var doesn't exist yet\nlet data = global.get(\"sensorData\") || [];\n\n//add new datapoint to data\n//we'll go with a JSON object containing the contents of the request body\n//and another property containing the current timestamp\ndata.push({msg: Number(msg.req.body), timeSent: Date.now()});\n\n//finally, update the contents of your global variable with the new data\nglobal.set(\"sensorData\", data);\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 440,
+        "y": 240,
+        "wires": [
+            [
+                "d474c3da133f6e7b"
+            ]
+        ]
+    },
+    {
+        "id": "982ab822005f2efc",
+        "type": "http in",
+        "z": "240eb8a87d91f0f4",
+        "name": "",
+        "url": "/newData",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 230,
+        "y": 280,
+        "wires": [
+            [
+                "c4ce6d384d35ef73"
+            ]
+        ]
+    },
+    {
+        "id": "c4ce6d384d35ef73",
+        "type": "function",
+        "z": "240eb8a87d91f0f4",
+        "name": "function 2",
+        "func": "//get global variable contents\nmsg.payload = global.get(\"sensorData\") || [];\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 440,
+        "y": 280,
+        "wires": [
+            [
+                "f39b98793da94e8d"
+            ]
+        ]
+    },
+    {
+        "id": "f39b98793da94e8d",
+        "type": "http response",
+        "z": "240eb8a87d91f0f4",
+        "name": "",
+        "statusCode": "200",
+        "headers": {},
+        "x": 620,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "ccf370f2942ed1a6",
+        "type": "comment",
+        "z": "240eb8a87d91f0f4",
+        "name": "Example 1: POST to /newData to add data to a global variable, GET /newData to retrieve all data",
+        "info": "",
+        "x": 430,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "bba56254a86553eb",
+        "type": "comment",
+        "z": "240eb8a87d91f0f4",
+        "name": "Example 2: same as example 1 but uses query strings to store data from multiple clients",
+        "info": "",
+        "x": 400,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "84ca0c2b688dc0d6",
+        "type": "http in",
+        "z": "240eb8a87d91f0f4",
+        "name": "",
+        "url": "/multiData",
+        "method": "post",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 220,
+        "y": 420,
+        "wires": [
+            [
+                "7e1c53f2aa3850e1"
+            ]
+        ]
+    },
+    {
+        "id": "0a30be6f572cdb2b",
+        "type": "comment",
+        "z": "240eb8a87d91f0f4",
+        "name": "Client URL endpoints should contain a query parameter \"deviceID\" with a unique value",
+        "info": "",
+        "x": 400,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "7e1c53f2aa3850e1",
+        "type": "function",
+        "z": "240eb8a87d91f0f4",
+        "name": "function 3",
+        "func": "//get current global variable contents, or start a new object\nlet data = global.get(\"multiData\") || {};\n//get deviceID value from request query object\nlet deviceID = msg.req.query.deviceID;\nif (!deviceID) { //if request does not have deviceID parameter\n    msg.payload = \"Request must have a deviceID query param.\";\n    msg.statusCode = 400; //set status code to 400: \"bad request\"\n    return msg; //return message immediately\n}\n//get this device's current data, or start a new array\nlet deviceData = data[deviceID] || [];\n//push new datapoint to array;\ndeviceData.push({timeSent: Date.now(), data: msg.req.body});\ndata[deviceID] = deviceData; //update complete data object\nglobal.set(\"multiData\", data); //update global var\nmsg.statusCode = 200; //set status code to 200: \"OK\"\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 440,
+        "y": 420,
+        "wires": [
+            [
+                "2e872d07a6f539b3"
+            ]
+        ]
+    },
+    {
+        "id": "2e872d07a6f539b3",
+        "type": "http response",
+        "z": "240eb8a87d91f0f4",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 610,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "0a97f29f280e47af",
+        "type": "http in",
+        "z": "240eb8a87d91f0f4",
+        "name": "",
+        "url": "/multiData",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 220,
+        "y": 460,
+        "wires": [
+            [
+                "7bf3333810f0633b"
+            ]
+        ]
+    },
+    {
+        "id": "7bf3333810f0633b",
+        "type": "function",
+        "z": "240eb8a87d91f0f4",
+        "name": "function 4",
+        "func": "//get global variable contents, or an empty object\nlet allData = global.get(\"multiData\") || {};\n//if GET request has a query parameter for a device ID\nif (msg.req.query.deviceID) {\n    //add only that device's data to payload\n    msg.payload = allData[msg.req.query.deviceID];\n} else {\n    //no deviceID query parameter: return ALL data\n    msg.payload = allData;\n}\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 440,
+        "y": 460,
+        "wires": [
+            [
+                "65397fccbfcf67c6"
+            ]
+        ]
+    },
+    {
+        "id": "65397fccbfcf67c6",
+        "type": "http response",
+        "z": "240eb8a87d91f0f4",
+        "name": "",
+        "statusCode": "200",
+        "headers": {},
+        "x": 620,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "d6c8f519e645f36a",
+        "type": "comment",
+        "z": "240eb8a87d91f0f4",
+        "name": "Example 3: same as example 2 but stores data in a text file instead of a global variable",
+        "info": "",
+        "x": 400,
+        "y": 540,
+        "wires": []
+    },
+    {
+        "id": "fafde87d516029e1",
+        "type": "http in",
+        "z": "240eb8a87d91f0f4",
+        "name": "",
+        "url": "/textData",
+        "method": "post",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 120,
+        "y": 620,
+        "wires": [
+            [
+                "79b87e80fba9ae3c"
+            ]
+        ]
+    },
+    {
+        "id": "fd08a952c5c11ce6",
+        "type": "function",
+        "z": "240eb8a87d91f0f4",
+        "name": "function 5",
+        "func": "//parse file contents into a JSON object or start new\nlet data = msg.payload ? JSON.parse(msg.payload) : {};\nlet deviceID = msg.req.query.deviceID; //get deviceID from request query\nlet deviceData = data[deviceID] || []; //get device's data or start new array\ndeviceData.push({timeSent: Date.now(), data: msg.req.body}); //add datapoint\ndata[deviceID] = deviceData; //update complete data object\nmsg.payload = JSON.stringify(data); //convert JSON object to string\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 560,
+        "y": 620,
+        "wires": [
+            [
+                "5b9c041807f5e85f"
+            ]
+        ]
+    },
+    {
+        "id": "f2736ce310ec0a29",
+        "type": "file in",
+        "z": "240eb8a87d91f0f4",
+        "name": "Get data from file",
+        "filename": "sensorData.txt",
+        "filenameType": "str",
+        "format": "utf8",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "none",
+        "allProps": false,
+        "x": 390,
+        "y": 620,
+        "wires": [
+            [
+                "fd08a952c5c11ce6"
+            ]
+        ]
+    },
+    {
+        "id": "ea40635bfb78c11f",
+        "type": "http response",
+        "z": "240eb8a87d91f0f4",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 730,
+        "y": 720,
+        "wires": []
+    },
+    {
+        "id": "79b87e80fba9ae3c",
+        "type": "switch",
+        "z": "240eb8a87d91f0f4",
+        "name": "query has deviceID?",
+        "property": "req.query",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "hask",
+                "v": "deviceID",
+                "vt": "str"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 160,
+        "y": 680,
+        "wires": [
+            [
+                "f2736ce310ec0a29"
+            ],
+            [
+                "b05553a58fe52b73"
+            ]
+        ]
+    },
+    {
+        "id": "b05553a58fe52b73",
+        "type": "change",
+        "z": "240eb8a87d91f0f4",
+        "name": "Set status 400",
+        "rules": [
+            {
+                "t": "set",
+                "p": "statusCode",
+                "pt": "msg",
+                "to": "400",
+                "tot": "num"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 420,
+        "y": 720,
+        "wires": [
+            [
+                "ea40635bfb78c11f"
+            ]
+        ]
+    },
+    {
+        "id": "5b9c041807f5e85f",
+        "type": "file",
+        "z": "240eb8a87d91f0f4",
+        "name": "Update file contents",
+        "filename": "sensorData.txt",
+        "filenameType": "str",
+        "appendNewline": false,
+        "createDir": false,
+        "overwriteFile": "true",
+        "encoding": "none",
+        "x": 740,
+        "y": 620,
+        "wires": [
+            [
+                "da3ff8999a1ff171"
+            ]
+        ]
+    },
+    {
+        "id": "da3ff8999a1ff171",
+        "type": "change",
+        "z": "240eb8a87d91f0f4",
+        "name": "Set payload to req body + status 200",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "req.body",
+                "tot": "msg"
+            },
+            {
+                "t": "set",
+                "p": "statusCode",
+                "pt": "msg",
+                "to": "200",
+                "tot": "num"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 490,
+        "y": 680,
+        "wires": [
+            [
+                "ea40635bfb78c11f"
+            ]
+        ]
+    },
+    {
+        "id": "8a46e4650f595c73",
+        "type": "http in",
+        "z": "240eb8a87d91f0f4",
+        "name": "",
+        "url": "/textData",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 170,
+        "y": 800,
+        "wires": [
+            [
+                "1968a409ced1377a"
+            ]
+        ]
+    },
+    {
+        "id": "1968a409ced1377a",
+        "type": "file in",
+        "z": "240eb8a87d91f0f4",
+        "name": "Get data from file",
+        "filename": "sensorData.txt",
+        "filenameType": "str",
+        "format": "utf8",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "none",
+        "allProps": false,
+        "x": 370,
+        "y": 800,
+        "wires": [
+            [
+                "f24bcdbacabc79bd"
+            ]
+        ]
+    },
+    {
+        "id": "f24bcdbacabc79bd",
+        "type": "function",
+        "z": "240eb8a87d91f0f4",
+        "name": "function 7",
+        "func": "let data = msg.payload ? JSON.parse(msg.payload) : {};\nmsg.payload = data[msg.req.query.deviceID] || data;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 560,
+        "y": 800,
+        "wires": [
+            [
+                "8f42a913c107c97b"
+            ]
+        ]
+    },
+    {
+        "id": "8f42a913c107c97b",
+        "type": "http response",
+        "z": "240eb8a87d91f0f4",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 710,
+        "y": 800,
+        "wires": []
+    }
+]

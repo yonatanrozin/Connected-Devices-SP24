@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Fetch HTTP Example</title>
+    </head>
+    <body>
+
+        <label>
+            Client ID: <input id="id_input"/>
+        </label>
+        <label>
+            Message: <input id="msg_input"/>
+        </label>
+        <button onClick="postData()">POST Data</button>
+        <br><br>
+
+        <label>
+            Client ID to get data: <input id="get_id_input"/>
+        </label>
+        <button onClick="getData()">GET Data</button>
+        <br><br>
+        
+        <table>
+            <thead>
+                <th>Data</th>
+                <th>Time sent</th>
+            </thead>
+            <tbody id="table_body"></tbody>
+        </table>
+
+        <script>
+            const serverIP = "165.227.111.77";
+            const port = 1880;
+
+            function postData() {
+                const deviceID = document.getElementById("id_input").value;
+                fetch(`http://${serverIP}:${port}/multiData?deviceID=${deviceID}`, {
+                    method: "POST", 
+                    body: document.getElementById("msg_input").value
+                });
+            }
+
+            function getData() {
+                const deviceID = document.getElementById("get_id_input").value
+                fetch(`http://${serverIP}:${port}/multiData?deviceID=${deviceID}`) //make the request
+                //.then(res => res.text()) //if expecting a plain text response
+                .then(res => res.json()) //if expecting a JSON response
+                .then(body => parseData(body)); //when body is parsed
+            }
+
+            function parseData(json) {
+                document.getElementById("table_body").innerHTML = "";
+                for (const dataPoint of json) {
+                    const newRow = document.createElement("tr"); //create a new table row
+
+                    const dataCell = document.createElement("td"); //create a new table cell
+                    dataCell.innerHTML = dataPoint.data;
+
+                    const timeCell = document.createElement("td");
+                    timeCell.innerHTML = new Date(dataPoint.timeSent).toString();
+
+                    newRow.appendChild(dataCell);
+                    newRow.appendChild(timeCell);
+
+                    document.getElementById("table_body").appendChild(newRow);
+                }
+            }
+        </script>
+    </body>
+</html>
