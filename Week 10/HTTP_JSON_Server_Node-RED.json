@@ -132,11 +132,11 @@
         "method": "post",
         "upload": false,
         "swaggerDoc": "",
-        "x": 220,
-        "y": 420,
+        "x": 160,
+        "y": 460,
         "wires": [
             [
-                "7e1c53f2aa3850e1"
+                "26803d6ccb49f7e1"
             ]
         ]
     },
@@ -144,9 +144,9 @@
         "id": "0a30be6f572cdb2b",
         "type": "comment",
         "z": "240eb8a87d91f0f4",
-        "name": "Client URL endpoints should contain a query parameter \"deviceID\" with a unique value",
+        "name": "[switch] node routes requests that do/don't have a \"deviceID\" query parameter",
         "info": "",
-        "x": 400,
+        "x": 370,
         "y": 380,
         "wires": []
     },
@@ -154,16 +154,16 @@
         "id": "7e1c53f2aa3850e1",
         "type": "function",
         "z": "240eb8a87d91f0f4",
-        "name": "function 3",
-        "func": "//get current global variable contents, or start a new object\nlet data = global.get(\"multiData\") || {};\n//get deviceID value from request query object\nlet deviceID = msg.req.query.deviceID;\nif (!deviceID) { //if request does not have deviceID parameter\n    msg.payload = \"Request must have a deviceID query param.\";\n    msg.statusCode = 400; //set status code to 400: \"bad request\"\n    return msg; //return message immediately\n}\n//get this device's current data, or start a new array\nlet deviceData = data[deviceID] || [];\n//push new datapoint to array;\ndeviceData.push({timeSent: Date.now(), data: msg.req.body});\ndata[deviceID] = deviceData; //update complete data object\nglobal.set(\"multiData\", data); //update global var\nmsg.statusCode = 200; //set status code to 200: \"OK\"\nreturn msg;",
+        "name": "Add new data to global",
+        "func": "let data = global.get(\"multiData\") || {};\nlet deviceData = data[msg.req.query.deviceID] || [];\ndeviceData.push({timeSent: Date.now(), data: msg.req.body});\ndata[msg.req.query.deviceID] = deviceData; \nglobal.set(\"multiData\", data);\nreturn msg;\n",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 440,
-        "y": 420,
+        "x": 620,
+        "y": 460,
         "wires": [
             [
                 "2e872d07a6f539b3"
@@ -178,7 +178,7 @@
         "statusCode": "",
         "headers": {},
         "x": 610,
-        "y": 420,
+        "y": 520,
         "wires": []
     },
     {
@@ -190,8 +190,8 @@
         "method": "get",
         "upload": false,
         "swaggerDoc": "",
-        "x": 220,
-        "y": 460,
+        "x": 140,
+        "y": 580,
         "wires": [
             [
                 "7bf3333810f0633b"
@@ -202,7 +202,7 @@
         "id": "7bf3333810f0633b",
         "type": "function",
         "z": "240eb8a87d91f0f4",
-        "name": "function 4",
+        "name": "Get device data from global",
         "func": "//get global variable contents, or an empty object\nlet allData = global.get(\"multiData\") || {};\n//if GET request has a query parameter for a device ID\nif (msg.req.query.deviceID) {\n    //add only that device's data to payload\n    msg.payload = allData[msg.req.query.deviceID];\n} else {\n    //no deviceID query parameter: return ALL data\n    msg.payload = allData;\n}\nreturn msg;",
         "outputs": 1,
         "timeout": 0,
@@ -210,8 +210,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 440,
-        "y": 460,
+        "x": 380,
+        "y": 580,
         "wires": [
             [
                 "65397fccbfcf67c6"
@@ -225,8 +225,8 @@
         "name": "",
         "statusCode": "200",
         "headers": {},
-        "x": 620,
-        "y": 460,
+        "x": 600,
+        "y": 580,
         "wires": []
     },
     {
@@ -235,8 +235,8 @@
         "z": "240eb8a87d91f0f4",
         "name": "Example 3: same as example 2 but stores data in a text file instead of a global variable",
         "info": "",
-        "x": 400,
-        "y": 540,
+        "x": 360,
+        "y": 640,
         "wires": []
     },
     {
@@ -249,7 +249,7 @@
         "upload": false,
         "swaggerDoc": "",
         "x": 120,
-        "y": 620,
+        "y": 740,
         "wires": [
             [
                 "79b87e80fba9ae3c"
@@ -269,7 +269,7 @@
         "finalize": "",
         "libs": [],
         "x": 560,
-        "y": 620,
+        "y": 740,
         "wires": [
             [
                 "5b9c041807f5e85f"
@@ -289,7 +289,7 @@
         "encoding": "none",
         "allProps": false,
         "x": 390,
-        "y": 620,
+        "y": 740,
         "wires": [
             [
                 "fd08a952c5c11ce6"
@@ -304,7 +304,7 @@
         "statusCode": "",
         "headers": {},
         "x": 730,
-        "y": 720,
+        "y": 840,
         "wires": []
     },
     {
@@ -328,7 +328,7 @@
         "repair": false,
         "outputs": 2,
         "x": 160,
-        "y": 680,
+        "y": 800,
         "wires": [
             [
                 "f2736ce310ec0a29"
@@ -358,7 +358,7 @@
         "to": "",
         "reg": false,
         "x": 420,
-        "y": 720,
+        "y": 840,
         "wires": [
             [
                 "ea40635bfb78c11f"
@@ -377,7 +377,7 @@
         "overwriteFile": "true",
         "encoding": "none",
         "x": 740,
-        "y": 620,
+        "y": 740,
         "wires": [
             [
                 "da3ff8999a1ff171"
@@ -394,8 +394,8 @@
                 "t": "set",
                 "p": "payload",
                 "pt": "msg",
-                "to": "req.body",
-                "tot": "msg"
+                "to": "ff",
+                "tot": "str"
             },
             {
                 "t": "set",
@@ -411,7 +411,7 @@
         "to": "",
         "reg": false,
         "x": 490,
-        "y": 680,
+        "y": 800,
         "wires": [
             [
                 "ea40635bfb78c11f"
@@ -427,8 +427,8 @@
         "method": "get",
         "upload": false,
         "swaggerDoc": "",
-        "x": 170,
-        "y": 800,
+        "x": 130,
+        "y": 900,
         "wires": [
             [
                 "1968a409ced1377a"
@@ -447,8 +447,8 @@
         "sendError": false,
         "encoding": "none",
         "allProps": false,
-        "x": 370,
-        "y": 800,
+        "x": 350,
+        "y": 900,
         "wires": [
             [
                 "f24bcdbacabc79bd"
@@ -467,23 +467,118 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 560,
-        "y": 800,
+        "x": 520,
+        "y": 900,
         "wires": [
             [
-                "8f42a913c107c97b"
+                "6b408ef4323df2be"
             ]
         ]
     },
     {
-        "id": "8f42a913c107c97b",
+        "id": "26803d6ccb49f7e1",
+        "type": "switch",
+        "z": "240eb8a87d91f0f4",
+        "name": "query has deviceID?",
+        "property": "req.query",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "hask",
+                "v": "deviceID",
+                "vt": "str"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 160,
+        "y": 520,
+        "wires": [
+            [
+                "a9ce3a90c5096a9f"
+            ],
+            [
+                "d2859bd4be17b9e5"
+            ]
+        ]
+    },
+    {
+        "id": "a9ce3a90c5096a9f",
+        "type": "change",
+        "z": "240eb8a87d91f0f4",
+        "name": "status code 200",
+        "rules": [
+            {
+                "t": "set",
+                "p": "statusCode",
+                "pt": "msg",
+                "to": "200",
+                "tot": "num"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 400,
+        "y": 460,
+        "wires": [
+            [
+                "7e1c53f2aa3850e1"
+            ]
+        ]
+    },
+    {
+        "id": "d2859bd4be17b9e5",
+        "type": "change",
+        "z": "240eb8a87d91f0f4",
+        "name": "status code 400",
+        "rules": [
+            {
+                "t": "set",
+                "p": "statusCode",
+                "pt": "msg",
+                "to": "400",
+                "tot": "num"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 400,
+        "y": 520,
+        "wires": [
+            [
+                "2e872d07a6f539b3"
+            ]
+        ]
+    },
+    {
+        "id": "6b408ef4323df2be",
         "type": "http response",
         "z": "240eb8a87d91f0f4",
         "name": "",
-        "statusCode": "",
+        "statusCode": "200",
         "headers": {},
-        "x": 710,
-        "y": 800,
+        "x": 700,
+        "y": 900,
+        "wires": []
+    },
+    {
+        "id": "dd5a8e4eb682c80b",
+        "type": "comment",
+        "z": "240eb8a87d91f0f4",
+        "name": "Be sure to create the text file in the Node-RED working directory first!",
+        "info": "",
+        "x": 380,
+        "y": 680,
         "wires": []
     }
 ]
